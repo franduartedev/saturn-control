@@ -1,0 +1,31 @@
+# Entornos Python
+.venv/
+.venv-build/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Builds y releases generadas
+build/
+dist/
+release/
+installer_output/
+*.spec.bak
+
+# Archivos locales
+.env
+.env.*
+*.log
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Arduino
+*.hex
+*.elf
+
+# Opcional: imagen fuente privada del icono
+assets/icon_source.*

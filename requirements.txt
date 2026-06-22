@@ -1,0 +1,9 @@
+flask>=3.0.0
+flask-socketio>=5.3.0
+keyboard>=0.13.5
+pynput>=1.7.6; platform_system == "Linux"
+pywebview>=5.0; platform_system == "Windows"
+pyautogui>=0.9.54
+pycaw>=20230407; platform_system == "Windows"
+obsws-python>=1.7.0
+comtypes>=1.2.0; platform_system == "Windows"

@@ -1,0 +1,272 @@
+{
+  "active_profile": "media",
+  "obs": {
+    "host": "localhost",
+    "password": "",
+    "port": 4455
+  },
+  "system_commands": {
+    "linux": {
+      "open_chrome": [
+        [
+          "brave-browser"
+        ],
+        [
+          "google-chrome"
+        ],
+        [
+          "firefox"
+        ]
+      ],
+      "open_discord": [
+        [
+          "discord"
+        ],
+        [
+          "flatpak",
+          "run",
+          "com.discordapp.Discord"
+        ]
+      ],
+      "open_obs": [
+        [
+          "obs"
+        ],
+        [
+          "obs-studio"
+        ],
+        [
+          "flatpak",
+          "run",
+          "com.obsproject.Studio"
+        ]
+      ],
+      "open_spotify": [
+        [
+          "spotify"
+        ],
+        [
+          "flatpak",
+          "run",
+          "com.spotify.Client"
+        ]
+      ],
+      "open_steam": [
+        [
+          "steam"
+        ],
+        [
+          "flatpak",
+          "run",
+          "com.valvesoftware.Steam"
+        ]
+      ],
+      "open_telegram": [
+        [
+          "telegram-desktop"
+        ],
+        [
+          "flatpak",
+          "run",
+          "org.telegram.desktop"
+        ]
+      ],
+      "open_terminal": [
+        [
+          "x-terminal-emulator"
+        ],
+        [
+          "gnome-terminal"
+        ],
+        [
+          "konsole"
+        ],
+        [
+          "xfce4-terminal"
+        ]
+      ],
+      "open_vscode": [
+        [
+          "code"
+        ],
+        [
+          "codium"
+        ]
+      ]
+    },
+    "macos": {},
+    "windows": {}
+  },
+  "profiles": {
+    "gaming": {
+      "buttons": {
+        "1": {
+          "action": "screenshot",
+          "key": "F13",
+          "label": "Captura",
+          "params": {}
+        },
+        "2": {
+          "action": "mute_mic",
+          "key": "F14",
+          "label": "Mic Mute",
+          "params": {}
+        },
+        "3": {
+          "action": "open_discord",
+          "key": "F15",
+          "label": "Discord",
+          "params": {}
+        },
+        "4": {
+          "action": "volume_up",
+          "key": "F16",
+          "label": "Volumen +",
+          "params": {}
+        },
+        "5": {
+          "action": "volume_down",
+          "key": "F17",
+          "label": "Volumen -",
+          "params": {}
+        },
+        "6": {
+          "action": "open_steam",
+          "key": "F18",
+          "label": "Steam",
+          "params": {}
+        }
+      },
+      "name": "Gaming"
+    },
+    "media": {
+      "buttons": {
+        "1": {
+          "action": "play_pause",
+          "key": "F13",
+          "label": "Play / Pause",
+          "params": {}
+        },
+        "2": {
+          "action": "prev_track",
+          "key": "F14",
+          "label": "Anterior",
+          "params": {}
+        },
+        "3": {
+          "action": "next_track",
+          "key": "F15",
+          "label": "Siguiente",
+          "params": {}
+        },
+        "4": {
+          "action": "mute",
+          "key": "F16",
+          "label": "Silenciar",
+          "params": {}
+        },
+        "5": {
+          "action": "volume_down",
+          "key": "F17",
+          "label": "Volumen −",
+          "params": {}
+        },
+        "6": {
+          "action": "volume_up",
+          "key": "F18",
+          "label": "Volumen +",
+          "params": {}
+        }
+      },
+      "name": "Media"
+    },
+    "stream": {
+      "buttons": {
+        "1": {
+          "action": "obs_scene",
+          "key": "F13",
+          "label": "Escena: Juegos",
+          "params": {
+            "scene": "Juegos"
+          }
+        },
+        "2": {
+          "action": "obs_scene",
+          "key": "F14",
+          "label": "Escena: Cámara",
+          "params": {
+            "scene": "Cámara"
+          }
+        },
+        "3": {
+          "action": "obs_scene",
+          "key": "F15",
+          "label": "Escena: BRB",
+          "params": {
+            "scene": "BRB"
+          }
+        },
+        "4": {
+          "action": "mute_mic",
+          "key": "F16",
+          "label": "Mic Mute",
+          "params": {}
+        },
+        "5": {
+          "action": "obs_start_stream",
+          "key": "F17",
+          "label": "▶ Stream",
+          "params": {}
+        },
+        "6": {
+          "action": "obs_stop_stream",
+          "key": "F18",
+          "label": "⏹ Stream",
+          "params": {}
+        }
+      },
+      "name": "Stream"
+    },
+    "work": {
+      "buttons": {
+        "1": {
+          "action": "vscode_run",
+          "key": "F13",
+          "label": "Ejecutar",
+          "params": {}
+        },
+        "2": {
+          "action": "vscode_build",
+          "key": "F14",
+          "label": "Compilar",
+          "params": {}
+        },
+        "3": {
+          "action": "vscode_live_server_stop",
+          "key": "F15",
+          "label": "Live Server ⏹",
+          "params": {}
+        },
+        "4": {
+          "action": "file_explorer",
+          "key": "F16",
+          "label": "Explorador",
+          "params": {}
+        },
+        "5": {
+          "action": "open_vscode",
+          "key": "F17",
+          "label": "VS Code",
+          "params": {}
+        },
+        "6": {
+          "action": "vscode_live_server_open",
+          "key": "F18",
+          "label": "Live Server ▶",
+          "params": {}
+        }
+      },
+      "name": "Trabajo"
+    }
+  }
+}
