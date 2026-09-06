@@ -3,256 +3,184 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SATURN CONTROL</title>
-  <link rel="stylesheet" href="/styles.css?v=12">
+  <title>SATURN Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body>
-  <div class="window-shell">
-    <header class="window-header">
-      <div class="brand">
-        <div class="brand-mark" data-ui-icon="orbit"></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">S</div>
         <div>
-          <h1>SATURN CONTROL</h1>
-          <p>Macro Deck Arduino Pro</p>
+          <div class="brand-name">SATURN</div>
+          <div class="brand-sub">FD Labs Control Node</div>
         </div>
       </div>
 
-      <div class="window-controls" aria-label="Estado del panel">
-        <div class="header-status">
-          <span class="pulse-dot"></span>
-          <strong>Panel local</strong>
-        </div>
-        <button class="header-action" id="reloadBtn" type="button" title="Actualizar panel">
-          <span data-ui-icon="refresh"></span>
-          <strong>Actualizar</strong>
-        </button>
+      <nav class="nav-tabs" aria-label="Secciones">
+        <button class="nav-tab active" data-view="control"><span data-icon="layout"></span> Control</button>
+        <button class="nav-tab" data-view="profiles"><span data-icon="layers"></span> Perfiles</button>
+        <button class="nav-tab" data-view="diagnostics"><span data-icon="activity"></span> Diagnóstico</button>
+        <button class="nav-tab" data-view="help"><span data-icon="book"></span> Cómo usar</button>
+      </nav>
+
+      <div class="device-card">
+        <div class="device-title">Estado del nodo</div>
+        <div class="status-line"><span id="statusDot" class="dot"></span><span id="statusText">Cargando...</span></div>
+        <dl class="mini-dl">
+          <dt>Perfil</dt><dd id="sideProfile">—</dd>
+          <dt>Tecla</dt><dd id="sideKey">—</dd>
+          <dt>Botón</dt><dd id="sideButton">—</dd>
+        </dl>
       </div>
-    </header>
+    </aside>
 
-    <div class="workspace">
-      <aside class="side-panel">
-        <nav class="nav-tabs" id="mainMenu" aria-label="Secciones">
-          <button class="nav-tab is-active" data-section="macros" type="button">
-            <span data-ui-icon="layoutGrid"></span>
-            <strong>Macros</strong>
-          </button>
-          <button class="nav-tab" data-section="profiles" type="button">
-            <span data-ui-icon="layers"></span>
-            <strong>Perfiles</strong>
-          </button>
-          <button class="nav-tab" data-section="diagnostics" type="button">
-            <span data-ui-icon="activity"></span>
-            <strong>Diagnóstico</strong>
-          </button>
-          <button class="nav-tab" data-section="help" type="button">
-            <span data-ui-icon="book"></span>
-            <strong>Cómo usar</strong>
-          </button>
-        </nav>
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Arduino Pro Micro · F13-F18 · Linux/X11</p>
+          <h1>SATURN Control</h1>
+        </div>
+        <div class="top-actions">
+          <select id="profileSelect" class="select"></select>
+          <button id="saveBtn" class="btn primary"><span data-icon="save"></span> Guardar</button>
+          <button id="refreshBtn" class="btn ghost"><span data-icon="refresh"></span> Actualizar</button>
+        </div>
+      </header>
 
-        <section class="device-card">
-          <div class="device-card-title">
-            <h3>ESTADO DEL DISPOSITIVO</h3>
-            <span class="pulse-dot"></span>
-          </div>
-
-          <div class="board-visual" aria-hidden="true">
-            <span data-ui-icon="cpu"></span>
-          </div>
-
-          <div class="device-info">
-            <span>Estado</span>
-            <strong id="statusListener">Cargando</strong>
-            <span>Sistema</span>
-            <strong id="statusSystem">Cargando</strong>
-            <span>Última tecla</span>
-            <strong id="statusKey">--</strong>
-            <span>Perfil</span>
-            <strong id="heroProfileName">--</strong>
-          </div>
-
-          <p class="device-note">El perfil activo se administra desde la sección Perfiles.</p>
-        </section>
-      </aside>
-
-      <main class="content-area">
-        <section class="section is-active" id="macrosSection">
-          <div class="control-grid">
-            <section class="macro-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">MAPA DE MACROS</p>
-                  <h2>Elegí un botón físico y asignale una acción.</h2>
-                </div>
-                <button class="button ghost live-view-button" id="testBtn" type="button">
-                  <span data-ui-icon="eye"></span>
-                  Probar
-                </button>
+      <section class="view active" id="view-control">
+        <div class="control-grid">
+          <article class="panel deck-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Layout físico</p>
+                <h2>Macro deck</h2>
               </div>
+              <div class="chip" id="listenerChip">Listener</div>
+            </div>
+            <div class="deck-grid" id="deckGrid"></div>
+          </article>
 
-              <div class="deck-grid" id="buttonGrid"></div>
-
-              <p class="macro-note">
-                <span data-ui-icon="circleHelp"></span>
-                Las macros se guardan localmente y funcionan mientras SATURN está activo.
-              </p>
-            </section>
-
-            <section class="config-panel">
-              <div class="editor-heading">
-                <div>
-                  <p class="eyebrow" id="selectedKey">F13</p>
-                  <h2 id="selectedTitle">CONFIGURAR BOTÓN 1</h2>
-                </div>
+          <article class="panel editor-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Configuración</p>
+                <h2 id="editorTitle">Botón 1</h2>
               </div>
+              <button id="testBtn" class="btn compact"><span data-icon="zap"></span> Probar</button>
+            </div>
 
-              <div class="field">
-                <label for="actionSelect">Tipo de acción</label>
-                <select id="actionSelect"></select>
-                <p class="hint" id="actionDescription">Seleccioná el comando asignado a este botón.</p>
-              </div>
-
-              <div class="field">
-                <label for="actionSearch">Buscar acción</label>
-                <input id="actionSearch" type="search" placeholder="OBS, volumen, comando, URL...">
-              </div>
-
-              <div class="field">
-                <label for="keyInput">Tecla física</label>
+            <div class="form-grid">
+              <label class="field">
+                <span>Etiqueta</span>
+                <input id="labelInput" type="text" placeholder="Play / Pause">
+              </label>
+              <label class="field">
+                <span>Tecla física</span>
                 <input id="keyInput" type="text" placeholder="F13">
-                <p class="hint">Debe coincidir con lo que envía el Pro Micro. Usá Diagnóstico para ver la última tecla recibida.</p>
-              </div>
-
-              <div class="params-panel" id="paramsPanel"></div>
-
-              <div class="field">
-                <label for="labelInput">Nombre del botón</label>
-                <input id="labelInput" type="text" placeholder="OBS">
-              </div>
-
-              <details class="advanced-box">
-                <summary>Parámetros avanzados</summary>
-                <textarea id="paramsJson" rows="8" spellcheck="false"></textarea>
-                <p class="hint">Editor JSON manual para opciones avanzadas.</p>
-              </details>
-
-              <button class="button primary save-wide" id="saveBtn" type="button">
-                <span data-ui-icon="save"></span>
-                Guardar
-              </button>
-              <p class="save-hint">Los cambios se guardan en <code>config.json</code>.</p>
-            </section>
-          </div>
-        </section>
-
-        <section class="section" id="profilesSection">
-          <div class="profiles-grid">
-            <section class="info-panel profile-editor-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">PERFILES</p>
-                  <h2>Organizá presets para stream, trabajo, música o juegos.</h2>
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="profileSelect">Perfil activo</label>
-                <select id="profileSelect"></select>
-                <p class="hint">Al cambiar de perfil, los seis botones cargan su propio mapa de acciones.</p>
-              </div>
-
-              <div class="field">
-                <label for="profileNameInput">Nombre del perfil</label>
-                <input id="profileNameInput" type="text" placeholder="Stream">
-              </div>
-
-              <div class="profile-actions">
-                <button class="button ghost" id="newProfileBtn" type="button">
-                  <span data-ui-icon="plus"></span>
-                  Nuevo perfil
-                </button>
-                <button class="button ghost danger" id="deleteProfileBtn" type="button">
-                  <span data-ui-icon="trash"></span>
-                  Eliminar perfil
-                </button>
-              </div>
-            </section>
-
-            <section class="info-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">RESUMEN</p>
-                  <h2>Vista rápida del perfil seleccionado.</h2>
-                </div>
-              </div>
-              <div class="profile-list" id="profileList"></div>
-            </section>
-          </div>
-        </section>
-
-        <section class="section" id="diagnosticsSection">
-          <div class="two-column">
-            <section class="info-panel">
-              <div class="panel-heading">
-                <h3>Estado del sistema</h3>
-              </div>
-              <div class="kv-list" id="diagnosticSummary"></div>
-            </section>
-            <section class="info-panel">
-              <div class="panel-heading">
-                <h3>Dependencias</h3>
-              </div>
-              <div class="dependency-list" id="dependencyList"></div>
-            </section>
-          </div>
-
-          <section class="info-panel">
-            <div class="panel-heading">
-              <h3>Eventos recientes</h3>
-              <button class="button ghost" id="refreshDiagBtn" type="button">Actualizar</button>
+              </label>
+              <label class="field full">
+                <span>Acción</span>
+                <select id="actionSelect"></select>
+              </label>
+              <div class="action-info full" id="actionInfo"></div>
+              <div class="params full" id="paramsBox"></div>
             </div>
-            <div class="event-list" id="eventList"></div>
-          </section>
+          </article>
+        </div>
 
-          <section class="info-panel">
-            <div class="panel-heading">
-              <h3>Teclas detectadas</h3>
+        <article class="panel log-panel">
+          <div class="panel-head slim">
+            <div>
+              <p class="panel-kicker">Tiempo real</p>
+              <h2>Eventos</h2>
             </div>
-            <div class="event-list" id="keyEventList"></div>
-          </section>
-        </section>
-
-        <section class="section" id="helpSection">
-          <div class="help-grid">
-            <article class="help-card">
-              <span class="step" data-ui-icon="plug"></span>
-              <h3>Conectá el macro deck</h3>
-              <p>El firmware debe enviar F13, F14, F15, F16, F17 y F18.</p>
-            </article>
-            <article class="help-card">
-              <span class="step" data-ui-icon="layers"></span>
-              <h3>Elegí un perfil</h3>
-              <p>Separá configuraciones para stream, trabajo, música y juegos.</p>
-            </article>
-            <article class="help-card">
-              <span class="step" data-ui-icon="sliders"></span>
-              <h3>Editá un botón</h3>
-              <p>Seleccioná una tecla física y asignale una acción desde el editor.</p>
-            </article>
-            <article class="help-card">
-              <span class="step" data-ui-icon="check"></span>
-              <h3>Guardá cambios</h3>
-              <p>Guardá la configuración y dejá SATURN corriendo en segundo plano.</p>
-            </article>
+            <button id="clearVisualBtn" class="btn ghost compact">Limpiar vista</button>
           </div>
-        </section>
-      </main>
-    </div>
+          <div class="events" id="eventsList"></div>
+        </article>
+      </section>
+
+      <section class="view" id="view-profiles">
+        <div class="split-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Gestión</p>
+                <h2>Perfiles</h2>
+              </div>
+              <button id="newProfileBtn" class="btn primary"><span data-icon="plus"></span> Nuevo</button>
+            </div>
+            <div class="profile-list" id="profileList"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Activo</p>
+                <h2>Editar perfil</h2>
+              </div>
+              <button id="deleteProfileBtn" class="btn danger"><span data-icon="trash"></span> Eliminar</button>
+            </div>
+            <label class="field">
+              <span>Nombre del perfil</span>
+              <input id="profileNameInput" type="text">
+            </label>
+            <p class="hint">Los cambios se guardan con el botón Guardar. Podés usar perfiles para Media, Stream, Trabajo, FD Labs o lo que quieras.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-diagnostics">
+        <div class="split-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Sistema</p>
+                <h2>Diagnóstico</h2>
+              </div>
+              <button id="copyDiagBtn" class="btn compact"><span data-icon="copy"></span> Copiar</button>
+            </div>
+            <dl class="diag-grid" id="diagGrid"></dl>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Dependencias</p>
+                <h2>Herramientas Linux</h2>
+              </div>
+            </div>
+            <div class="deps-grid" id="depsGrid"></div>
+            <div class="install-box">
+              <p>Para Arch/XFCE:</p>
+              <code>sudo pacman -S --needed playerctl wireplumber xdotool xdg-utils evtest usbutils</code>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-help">
+        <article class="panel readable">
+          <p class="panel-kicker">Guía rápida</p>
+          <h2>Cómo usar SATURN</h2>
+          <ol>
+            <li>Conectá el Pro Micro. En Linux debería aparecer como Arduino Leonardo HID.</li>
+            <li>Probá el hardware con <code>sudo evtest</code>. Los botones deben mandar <code>KEY_F13</code> a <code>KEY_F18</code>.</li>
+            <li>Levantá la app con <code>./launch_linux.sh</code>.</li>
+            <li>Elegí un perfil, tocá una macro, cambiá etiqueta/acción/parámetros y presioná <strong>Guardar</strong>.</li>
+            <li>Si multimedia no responde, instalá <code>playerctl</code> y verificá que tu navegador permita teclas multimedia.</li>
+          </ol>
+          <h3>Notas de FD Labs</h3>
+          <p>SATURN v1.1 es la base estable para Linux. SATURN v2 puede sumar 4 botones, 2 potenciómetros, pantalla OLED y conexión con ATLAS.</p>
+        </article>
+      </section>
+    </main>
   </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/app.js?v=12"></script>
+  <div class="toast" id="toast"></div>
+  <script src="app.js?v=29"></script>
 </body>
 </html>

@@ -1,43 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 cd "$(dirname "$0")"
-
 clear
-echo
-echo "=========================================="
-echo "           SATURN Stream Deck"
-echo "=========================================="
-echo
-echo "Iniciando el panel de macros..."
-echo "No cierres esta ventana mientras uses SATURN."
-echo
-
+printf '\n==========================================\n'
+printf '        SATURN Control v1.1\n'
+printf '        FD Labs · Linux Edition\n'
+printf '==========================================\n\n'
+printf '[1/5] Revisando Python...\n'
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "[SATURN] Python 3 no está instalado."
+  echo '[ERROR] No encontre python3. Instalalo y volve a correr.'
   exit 1
 fi
-
-if [ ! -d ".venv" ]; then
-  echo "Preparando entorno por primera vez..."
-  python3 -m venv .venv
-fi
-
-source .venv/bin/activate
-
-echo "Revisando dependencias..."
-python -m pip install --upgrade pip --quiet
-python -m pip install -r requirements.txt --quiet
-
-clear
-echo
-echo "=========================================="
-echo "             SATURN está listo"
-echo "=========================================="
-echo
-echo "Panel web: http://localhost:5000"
-echo
-echo "Se abrirá en tu navegador automáticamente."
-echo "Para cerrar SATURN, volvé a esta ventana y presioná CTRL+C."
-echo
-python app.py
+printf '[2/5] Preparando entorno virtual...\n'
+python3 -m venv .venv
+printf '[3/5] Actualizando pip...\n'
+.venv/bin/python -m pip install --upgrade pip >/dev/null
+printf '[4/5] Instalando/validando dependencias Python...\n'
+.venv/bin/python -m pip install -r requirements-linux.txt
+printf '\n[5/5] Iniciando SATURN...\n'
+printf 'Panel: http://127.0.0.1:5000\n'
+printf 'Para cerrar: Ctrl+C\n\n'
+.venv/bin/python app.py
