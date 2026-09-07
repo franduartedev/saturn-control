@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1 - 2026-09-06
+
+Fusión v1 (Windows) + edición Linux profesional. Misma base multiplataforma.
+
+### Agregado / arreglado
+
+- Soporte Windows mantenido: pycaw, pyautogui, rutas APPDATA, `run_saturn_server` para `desktop_app.py`.
+- Linux real: `playerctl` (fallback xdotool), `wpctl` → `pactl`, `xdg-open`, flatpak, `xdotool` para hotkeys/type.
+- Diagnóstico F13-F18: evdev 183-188, keysyms X11/XFCE, HID 0x68-0x6D + raw visible + `tools/key_watch_pynput.py`.
+- Perfiles/autoguardado: crear/duplicar/renombrar/eliminar/cambiar persiste; autoguardado debounce 1.5s + indicador.
+- Selector de acciones custom con buscador/filtro; catálogo unificado (incluye dev, system, open_app, system_command).
+- `diagnose_linux.sh` extendido, `requirements-linux.txt` + `requirements.txt` unificados.
+- README multiplataforma y versión 1.1.1 en app, web y scripts.
+
 ## 1.0.0 - 2026-06-23
 
 Primera versión estable de SATURN Control.

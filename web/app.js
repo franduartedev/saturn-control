@@ -8,6 +8,9 @@ let state = {
   selectedButton: '1',
   activeView: 'control',
   visualEventsClearedAt: null,
+  actionFilter: '',
+  saveTimer: null,
+  dirty: false,
 };
 
 const icons = {
@@ -116,15 +119,29 @@ function renderDeck() {
 
 function renderActionSelect() {
   const current = profile()?.buttons?.[state.selectedButton]?.action || '';
-  const grouped = state.actions.reduce((acc, a) => {
+  const filter = (state.actionFilter || '').trim().toLowerCase();
+  const filtered = filter
+    ? state.actions.filter((a) => `${a.name} ${a.id} ${a.category} ${a.description || ''}`.toLowerCase().includes(filter))
+    : state.actions;
+  const grouped = filtered.reduce((acc, a) => {
     (acc[a.category] ||= []).push(a);
     return acc;
   }, {});
-  $('actionSelect').innerHTML = Object.entries(grouped).map(([cat, actions]) => `
+  const html = Object.entries(grouped).map(([cat, actions]) => `
     <optgroup label="${esc(cat)}">
       ${actions.map((a) => `<option value="${esc(a.id)}" ${a.id === current ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}
     </optgroup>
   `).join('');
+  $('actionSelect').innerHTML = html || '<option value="">Sin coincidencias — limpiá el filtro</option>';
+  // Si la acción actual quedó filtrada, igual mostrarla para no perder el valor
+  if (current && ![...$('actionSelect').options].some((o) => o.value === current)) {
+    const meta = actionById(current);
+    const opt = document.createElement('option');
+    opt.value = current;
+    opt.textContent = `${meta.name} (actual)`;
+    opt.selected = true;
+    $('actionSelect').appendChild(opt);
+  }
 }
 
 function renderEditor() {
@@ -176,10 +193,13 @@ function renderProfiles() {
     </button>
   `).join('');
   document.querySelectorAll('.profile-item').forEach((item) => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', async () => {
+      patchSelectedButton();
       state.config.active_profile = item.dataset.profile;
       state.selectedButton = '1';
+      markDirty();
       renderAll();
+      try { await persistConfig(true); await loadAll(); } catch (e) { toast(`No se pudo cambiar perfil: ${e.message}`); }
     });
   });
   $('profileNameInput').value = profile()?.name || '';
@@ -213,6 +233,9 @@ function renderAll() {
   renderEvents();
   renderProfiles();
   renderDiagnostics();
+  updateSaveIndicator();
+  const search = $('actionSearch');
+  if (search && search.value !== state.actionFilter) search.value = state.actionFilter;
 }
 
 async function loadAll() {
@@ -226,6 +249,7 @@ async function loadAll() {
   state.actions = actions;
   state.diag = diag;
   state.events = events;
+  state.dirty = false;
   if (!profile()?.buttons?.[state.selectedButton]) state.selectedButton = '1';
   renderAll();
 }
@@ -244,15 +268,42 @@ function patchSelectedButton() {
   });
 }
 
-async function saveConfig() {
+async function persistConfig(silent = false) {
   patchSelectedButton();
   await api('/api/config', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(state.config),
   });
+  state.dirty = false;
+  updateSaveIndicator();
+  if (!silent) toast('Configuración guardada');
+}
+
+function updateSaveIndicator() {
+  const btn = $('saveBtn');
+  if (!btn) return;
+  btn.classList.toggle('dirty', !!state.dirty);
+  btn.innerHTML = state.dirty
+    ? '<span data-icon="save"></span> Guardar *'
+    : '<span data-icon="save"></span> Guardar';
+  hydrateStaticIcons();
+}
+
+function markDirty() {
+  state.dirty = true;
+  updateSaveIndicator();
+  clearTimeout(state.saveTimer);
+  // Autoguardado con debounce: evita perder perfiles/cambios si se cierra la pestaña
+  state.saveTimer = setTimeout(() => {
+    persistConfig(true).then(() => toast('Autoguardado OK')).catch((e) => toast(`Autoguardado falló: ${e.message}`));
+  }, 1500);
+}
+
+async function saveConfig() {
+  clearTimeout(state.saveTimer);
+  await persistConfig(false);
   state.visualEventsClearedAt = null;
-  toast('Configuración guardada');
   await loadAll();
 }
 
@@ -270,17 +321,20 @@ function switchView(name) {
 }
 
 function newProfile() {
+  patchSelectedButton();
   const idBase = 'perfil';
   let n = 1;
   while (state.config.profiles[`${idBase}${n}`]) n += 1;
   const id = `${idBase}${n}`;
-  const source = JSON.parse(JSON.stringify(profile()));
+  const source = JSON.parse(JSON.stringify(profile() || { name: '', buttons: {} }));
   source.name = `Perfil ${n}`;
   state.config.profiles[id] = source;
   state.config.active_profile = id;
   state.selectedButton = '1';
+  markDirty();
   renderAll();
-  toast('Perfil creado. Recordá guardar.');
+  persistConfig(true).then(loadAll).catch((e) => toast(`No se pudo crear: ${e.message}`));
+  toast('Perfil creado y guardado.');
 }
 
 function deleteProfile() {
@@ -290,8 +344,10 @@ function deleteProfile() {
   delete state.config.profiles[id];
   state.config.active_profile = Object.keys(state.config.profiles)[0];
   state.selectedButton = '1';
+  markDirty();
   renderAll();
-  toast('Perfil eliminado. Recordá guardar.');
+  persistConfig(true).then(loadAll).catch((e) => toast(`No se pudo eliminar: ${e.message}`));
+  toast('Perfil eliminado y guardado.');
 }
 
 function bindEvents() {
@@ -300,21 +356,28 @@ function bindEvents() {
   $('saveBtn').addEventListener('click', saveConfig);
   $('testBtn').addEventListener('click', testSelectedButton);
   $('clearVisualBtn').addEventListener('click', () => { state.visualEventsClearedAt = Date.now(); renderEvents(); });
-  $('profileSelect').addEventListener('change', (e) => {
+  $('profileSelect').addEventListener('change', async (e) => {
+    patchSelectedButton();
     state.config.active_profile = e.target.value;
     state.selectedButton = '1';
+    markDirty();
     renderAll();
+    try { await persistConfig(true); await loadAll(); } catch (err) { toast(`No se pudo cambiar perfil: ${err.message}`); }
   });
-  $('labelInput').addEventListener('input', () => { patchSelectedButton(); renderDeck(); });
-  $('keyInput').addEventListener('input', () => { patchSelectedButton(); renderDeck(); });
-  $('actionSelect').addEventListener('change', () => { patchSelectedButton(); renderEditor(); renderDeck(); });
+  $('labelInput').addEventListener('input', () => { patchSelectedButton(); markDirty(); renderDeck(); });
+  $('keyInput').addEventListener('input', () => { patchSelectedButton(); markDirty(); renderDeck(); });
+  $('actionSelect').addEventListener('change', () => { patchSelectedButton(); markDirty(); renderEditor(); renderDeck(); });
+  $('actionSearch').addEventListener('input', (e) => { state.actionFilter = e.target.value; renderActionSelect(); });
+  document.querySelector('#paramsBox').addEventListener('input', () => { markDirty(); });
   $('newProfileBtn').addEventListener('click', newProfile);
   $('deleteProfileBtn').addEventListener('click', deleteProfile);
   $('profileNameInput').addEventListener('input', (e) => {
     profile().name = e.target.value.trim() || state.config.active_profile;
+    markDirty();
     renderProfileSelect();
     renderProfiles();
   });
+  $('profileNameInput').addEventListener('change', () => persistConfig(true).catch((err) => toast(err.message)));
   $('copyDiagBtn').addEventListener('click', async () => {
     const payload = JSON.stringify(state.diag, null, 2);
     await navigator.clipboard?.writeText(payload);

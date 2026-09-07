@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 clear
 printf '\n==========================================\n'
-printf '        SATURN Control v1.1\n'
+printf '        SATURN Control v1.1.1\n'
 printf '        FD Labs · Linux Edition\n'
 printf '==========================================\n\n'
 printf '[1/5] Revisando Python...\n'

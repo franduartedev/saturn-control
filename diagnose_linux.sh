@@ -28,7 +28,15 @@ echo
 echo 'Comando recomendado en Arch/XFCE:'
 echo '  sudo pacman -S --needed playerctl wireplumber xdotool xdg-utils evtest usbutils'
 echo
-echo 'Test de botones:'
+echo 'Test de botones (esperado KEY_F13...KEY_F18):'
 echo '  sudo evtest'
 echo 'Elegí Arduino Leonardo y apretá los botones. Deberías ver KEY_F13...KEY_F18.'
 echo
+echo 'Watcher alternativo (muestra normalización a f13..f18):'
+echo '  .venv/bin/python tools/key_watch_pynput.py'
+echo
+echo 'Diagnóstico en vivo (con SATURN corriendo):'
+echo '  curl -s http://127.0.0.1:5000/api/diagnostics | python3 -m json.tool | head -80'
+echo
+echo 'Si multimedia/volumen falla:'
+echo '  playerctl play-pause ; wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ ; pactl info | head -5'

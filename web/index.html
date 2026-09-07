@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <div class="app-shell">
@@ -41,7 +41,7 @@
     <main class="main">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Arduino Pro Micro · F13-F18 · Linux/X11</p>
+          <p class="eyebrow">Arduino Pro Micro · F13-F18 · Windows + Linux</p>
           <h1>SATURN Control</h1>
         </div>
         <div class="top-actions">
@@ -81,6 +81,10 @@
               <label class="field">
                 <span>Tecla física</span>
                 <input id="keyInput" type="text" placeholder="F13">
+              </label>
+              <label class="field full">
+                <span>Buscar acción</span>
+                <input id="actionSearch" type="search" placeholder="Filtrar: obs, volumen, url, comando...">
               </label>
               <label class="field full">
                 <span>Acción</span>
@@ -129,7 +133,7 @@
               <span>Nombre del perfil</span>
               <input id="profileNameInput" type="text">
             </label>
-            <p class="hint">Los cambios se guardan con el botón Guardar. Podés usar perfiles para Media, Stream, Trabajo, FD Labs o lo que quieras.</p>
+            <p class="hint">Los cambios se autoguardian (debounce 1.5s) y también con el botón Guardar. El perfil activo, nombre y botones persisten en <code>config.json</code>.</p>
           </article>
         </div>
       </section>
@@ -150,13 +154,14 @@
             <div class="panel-head">
               <div>
                 <p class="panel-kicker">Dependencias</p>
-                <h2>Herramientas Linux</h2>
+                <h2>Sistema y herramientas</h2>
               </div>
             </div>
             <div class="deps-grid" id="depsGrid"></div>
             <div class="install-box">
-              <p>Para Arch/XFCE:</p>
+              <p>Arch/XFCE:</p>
               <code>sudo pacman -S --needed playerctl wireplumber xdotool xdg-utils evtest usbutils</code>
+              <p>Windows: sin dependencias del sistema. Solo instalá el .exe.</p>
             </div>
           </article>
         </div>
@@ -167,20 +172,20 @@
           <p class="panel-kicker">Guía rápida</p>
           <h2>Cómo usar SATURN</h2>
           <ol>
-            <li>Conectá el Pro Micro. En Linux debería aparecer como Arduino Leonardo HID.</li>
-            <li>Probá el hardware con <code>sudo evtest</code>. Los botones deben mandar <code>KEY_F13</code> a <code>KEY_F18</code>.</li>
-            <li>Levantá la app con <code>./launch_linux.sh</code>.</li>
-            <li>Elegí un perfil, tocá una macro, cambiá etiqueta/acción/parámetros y presioná <strong>Guardar</strong>.</li>
+            <li>Conectá el Pro Micro (Windows: HID directo · Linux: Arduino Leonardo HID).</li>
+            <li>Probá el hardware: en Linux <code>sudo evtest</code> debe mostrar <code>KEY_F13</code> a <code>KEY_F18</code>; en Windows usá la vista Diagnóstico (última tecla).</li>
+            <li>Levantá la app: Windows con <code>launch_desktop.bat</code> o el .exe · Linux con <code>./launch_linux.sh</code>.</li>
+            <li>Elegí un perfil, tocá una macro, cambiá etiqueta/acción/parámetros. Se autoguardia solo.</li>
             <li>Si multimedia no responde, instalá <code>playerctl</code> y verificá que tu navegador permita teclas multimedia.</li>
           </ol>
           <h3>Notas de FD Labs</h3>
-          <p>SATURN v1.1 es la base estable para Linux. SATURN v2 puede sumar 4 botones, 2 potenciómetros, pantalla OLED y conexión con ATLAS.</p>
+          <p>SATURN v1.1.1 es la base estable multiplataforma (Windows + Linux). SATURN v2 puede sumar 4 botones, 2 potenciómetros, pantalla OLED y conexión con ATLAS.</p>
         </article>
       </section>
     </main>
   </div>
 
   <div class="toast" id="toast"></div>
-  <script src="app.js?v=29"></script>
+  <script src="app.js?v=30"></script>
 </body>
 </html>
