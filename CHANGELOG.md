@@ -14,6 +14,10 @@ Fusión v1 (Windows) + edición Linux profesional. Misma base multiplataforma.
 - `diagnose_linux.sh` extendido, `requirements-linux.txt` + `requirements.txt` unificados.
 - README multiplataforma y versión 1.1.1 en app, web y scripts.
 
+### Docs
+
+- Presentación profesional del repo sin cambios funcionales: README reescrito, `docs/HARDWARE.md`, `docs/WIRING.md`, `docs/KEYCAPS.md` y `docs/FD_LABS.md`.
+
 ## 1.0.0 - 2026-06-23
 
 Primera versión estable de SATURN Control.
