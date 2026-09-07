@@ -5,99 +5,54 @@
     "password": "",
     "port": 4455
   },
-  "system_commands": {
-    "linux": {
-      "open_chrome": [
-        [
-          "brave-browser"
-        ],
-        [
-          "google-chrome"
-        ],
-        [
-          "firefox"
-        ]
-      ],
-      "open_discord": [
-        [
-          "discord"
-        ],
-        [
-          "flatpak",
-          "run",
-          "com.discordapp.Discord"
-        ]
-      ],
-      "open_obs": [
-        [
-          "obs"
-        ],
-        [
-          "obs-studio"
-        ],
-        [
-          "flatpak",
-          "run",
-          "com.obsproject.Studio"
-        ]
-      ],
-      "open_spotify": [
-        [
-          "spotify"
-        ],
-        [
-          "flatpak",
-          "run",
-          "com.spotify.Client"
-        ]
-      ],
-      "open_steam": [
-        [
-          "steam"
-        ],
-        [
-          "flatpak",
-          "run",
-          "com.valvesoftware.Steam"
-        ]
-      ],
-      "open_telegram": [
-        [
-          "telegram-desktop"
-        ],
-        [
-          "flatpak",
-          "run",
-          "org.telegram.desktop"
-        ]
-      ],
-      "open_terminal": [
-        [
-          "x-terminal-emulator"
-        ],
-        [
-          "gnome-terminal"
-        ],
-        [
-          "konsole"
-        ],
-        [
-          "xfce4-terminal"
-        ]
-      ],
-      "open_vscode": [
-        [
-          "code"
-        ],
-        [
-          "codium"
-        ]
-      ]
-    },
-    "macos": {},
-    "windows": {}
-  },
   "profiles": {
+    "fdlabs": {
+      "buttons": {
+        "1": {
+          "action": "open_folder",
+          "key": "F13",
+          "label": "ATLAS",
+          "params": {
+            "path": "/home/fran"
+          }
+        },
+        "2": {
+          "action": "open_obsidian",
+          "key": "F14",
+          "label": "Obsidian",
+          "params": {}
+        },
+        "3": {
+          "action": "custom_url",
+          "key": "F15",
+          "label": "YouTube",
+          "params": {
+            "url": "https://www.youtube.com"
+          }
+        },
+        "4": {
+          "action": "custom_url",
+          "key": "F16",
+          "label": "GitHub",
+          "params": {
+            "url": "https://github.com/franduartedev"
+          }
+        },
+        "5": {
+          "action": "open_terminal",
+          "key": "F17",
+          "label": "Terminal",
+          "params": {}
+        },
+        "6": {
+          "action": "play_pause",
+          "key": "F18",
+          "label": "Música",
+          "params": {}
+        }
+      },
+      "name": "FD Labs"
+    },
     "gaming": {
       "buttons": {
         "1": {
@@ -185,7 +140,7 @@
         "1": {
           "action": "obs_scene",
           "key": "F13",
-          "label": "Escena: Juegos",
+          "label": "Escena Juego",
           "params": {
             "scene": "Juegos"
           }
@@ -193,7 +148,7 @@
         "2": {
           "action": "obs_scene",
           "key": "F14",
-          "label": "Escena: Cámara",
+          "label": "Escena Cámara",
           "params": {
             "scene": "Cámara"
           }
@@ -201,7 +156,7 @@
         "3": {
           "action": "obs_scene",
           "key": "F15",
-          "label": "Escena: BRB",
+          "label": "BRB",
           "params": {
             "scene": "BRB"
           }
@@ -209,19 +164,19 @@
         "4": {
           "action": "mute_mic",
           "key": "F16",
-          "label": "Mic Mute",
+          "label": "Mic",
           "params": {}
         },
         "5": {
-          "action": "obs_start_stream",
+          "action": "obs_start_record",
           "key": "F17",
-          "label": "▶ Stream",
+          "label": "Grabar",
           "params": {}
         },
         "6": {
-          "action": "obs_stop_stream",
+          "action": "obs_stop_record",
           "key": "F18",
-          "label": "⏹ Stream",
+          "label": "Detener",
           "params": {}
         }
       },
@@ -230,43 +185,50 @@
     "work": {
       "buttons": {
         "1": {
-          "action": "vscode_run",
-          "key": "F13",
-          "label": "Ejecutar",
-          "params": {}
-        },
-        "2": {
-          "action": "vscode_build",
-          "key": "F14",
-          "label": "Compilar",
-          "params": {}
-        },
-        "3": {
-          "action": "vscode_live_server_stop",
-          "key": "F15",
-          "label": "Live Server ⏹",
-          "params": {}
-        },
-        "4": {
-          "action": "file_explorer",
-          "key": "F16",
-          "label": "Explorador",
-          "params": {}
-        },
-        "5": {
           "action": "open_vscode",
-          "key": "F17",
+          "key": "F13",
           "label": "VS Code",
           "params": {}
         },
-        "6": {
-          "action": "vscode_live_server_open",
-          "key": "F18",
-          "label": "Live Server ▶",
+        "2": {
+          "action": "open_terminal",
+          "key": "F14",
+          "label": "Terminal",
           "params": {}
+        },
+        "3": {
+          "action": "file_explorer",
+          "key": "F15",
+          "label": "Carpeta",
+          "params": {}
+        },
+        "4": {
+          "action": "open_browser",
+          "key": "F16",
+          "label": "Navegador",
+          "params": {}
+        },
+        "5": {
+          "action": "screenshot",
+          "key": "F17",
+          "label": "Captura",
+          "params": {}
+        },
+        "6": {
+          "action": "custom_url",
+          "key": "F18",
+          "label": "GitHub",
+          "params": {
+            "url": "https://github.com/franduartedev"
+          }
         }
       },
       "name": "Trabajo"
     }
+  },
+  "settings": {
+    "debounce_ms": 100,
+    "open_browser_on_start": true,
+    "theme": "saturn-dark"
   }
 }

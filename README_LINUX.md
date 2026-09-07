@@ -1,115 +1,47 @@
-# SATURN Stream Deck V2 en Linux
+# SATURN Control v1.1.1 · Linux
 
-## Probado para
-
-- Linux Mint / Ubuntu / Debian.
-- Sesion grafica X11 recomendada.
-- Wayland puede bloquear atajos globales en algunas distros.
-
-## Que trae esta V2
-
-- Deteccion de sistema operativo.
-- Diagnostico en `http://localhost:5000/api/diagnostics`.
-- Panel web para configurar macros sin editar JSON a mano.
-- Seccion "Como usar" dentro de la web.
-- Comandos configurables por sistema operativo desde `config.json`.
-- Launcher Linux con entorno virtual.
-- Instalador de autoinicio Linux.
-
-## Instalar dependencias del sistema
+## Arranque
 
 ```bash
-sudo apt update
-sudo apt install -y python3 python3-venv python3-tk xclip scrot xdotool pulseaudio-utils playerctl
-```
-
-## Ejecutar
-
-```bash
-chmod +x launch_linux.sh
+chmod +x *.sh
+./diagnose_linux.sh
 ./launch_linux.sh
 ```
 
-Despues abre:
+Panel local:
 
 ```text
-http://localhost:5000
+http://127.0.0.1:5000
 ```
 
-## Configurar macros desde la web
-
-1. Entra a `http://localhost:5000`.
-2. Elegi el perfil activo.
-3. Selecciona un boton F13-F18.
-4. Cambia el nombre visible, la accion y los parametros.
-5. Usa `Probar` para ejecutar la macro.
-6. Usa `Guardar cambios` para dejarla fija en `config.json`.
-
-La seccion `Como usar` esta dentro del panel para usuarios que no conocen el sistema.
-
-## Diagnosticar
+## Dependencias recomendadas en Arch/XFCE
 
 ```bash
-chmod +x diagnose_linux.sh
-./diagnose_linux.sh
+sudo pacman -S --needed python python-pip tk playerctl wireplumber xdotool xdg-utils evtest usbutils
 ```
 
-Tambien podes ver el reporte JSON en:
+## Test del Pro Micro
+
+```bash
+sudo evtest
+```
+
+Elegí `Arduino Leonardo` y verificá:
 
 ```text
-http://localhost:5000/api/diagnostics
+KEY_F13
+KEY_F14
+KEY_F15
+KEY_F16
+KEY_F17
+KEY_F18
 ```
 
-## Activar autoinicio
+## Notas
 
-```bash
-chmod +x install_autostart_linux.sh uninstall_autostart_linux.sh
-./install_autostart_linux.sh
-```
-
-Para sacarlo:
-
-```bash
-./uninstall_autostart_linux.sh
-```
-
-## Notas importantes
-
-- El macropad debe enviar `F13`, `F14`, `F15`, `F16`, `F17` y `F18`, igual que en Windows.
-- En Linux se intenta usar `pynput` como listener principal.
-- Si no detecta teclas, revisa que estes usando X11. En la pantalla de login suele aparecer una opcion de sesion.
-- Las acciones de media usan `playerctl`.
-- Las acciones de volumen y `mute_mic` usan `pactl`, incluido en `pulseaudio-utils`.
-- Apps como OBS, Discord, Spotify y Steam se abren si estan instaladas como comando normal o Flatpak.
-
-## Atajos que dependen del escritorio
-
-Algunos atajos como mostrar escritorio, snap left/right, historial del portapapeles o panel de notificaciones pueden variar entre Cinnamon, GNOME, KDE o XFCE. Las acciones base de media, volumen, abrir apps, OBS WebSocket, carpetas, URLs y comandos personalizados son las mas portables.
-
-## Personalizar comandos por sistema
-
-En `config.json`, la seccion `system_commands` permite cambiar comandos sin tocar Python. Ejemplo:
-
-```json
-"system_commands": {
-  "linux": {
-    "open_vscode": [["code"], ["codium"]],
-    "open_obs": [["obs"], ["flatpak", "run", "com.obsproject.Studio"]]
-  },
-  "windows": {},
-  "macos": {}
-}
-```
-
-Tambien existe la accion `system_command` para botones personalizados:
-
-```json
-{
-  "action": "system_command",
-  "label": "Mi script",
-  "params": {
-    "linux": "./scripts/mi-script.sh",
-    "windows": "powershell.exe -File scripts\\mi-script.ps1"
-  }
-}
-```
+- En X11/XFCE, `pynput` puede entregar F13-F18 como keysyms raros. SATURN v1.1.1 ya normaliza esos códigos (evdev 183-188, keysyms, HID).
+- Para multimedia usá `playerctl` (fallback `xdotool`).
+- Para volumen usá `wpctl`/WirePlumber con fallback a `pactl`.
+- Hotkeys y escribir texto usan `xdotool` si no hay `pyautogui`.
+- En Wayland puede haber restricciones para escuchar teclas globales (se avisa en Diagnóstico).
+- Perfiles y edición se autoguardian (debounce 1.5s); el selector de acciones tiene buscador.
